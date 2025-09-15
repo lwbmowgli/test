@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诗句自动播放</title>
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            overflow: hidden;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+        .poem-line {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin: 10px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .poem-line.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e0f7fa, #bbdefb, #c8e6c9);
+            z-index: 1;
+            opacity: 0.7;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #357abd;
+        }
+        .pause-btn {
+            background-color: #e74c3c;
+        }
+        .pause-btn:hover {
+            background-color: #c0392b;
+        }
+        .restart-btn {
+            background-color: #2ecc71;
+        }
+        .restart-btn:hover {
+            background-color: #27ae60;
+        }
+        @media (max-width: 480px) {
+            .poem-line {
+                font-size: 1rem;
+            }
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="container">
+        <div id="poem-container"></div>
+        <div class="controls">
+            <button id="pause-btn" class="pause-btn">暂停</button>
+            <button id="restart-btn" class="restart-btn">重新开始</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const poemLines = [
+                "九月、湿った車内、あなたは窓を見ている",
+                "窓の外、彼、水道管が咲き、椅子は異郷にある",
+                "葉には羽がある、上海の街、雪山がそばにある",
+                "あなたは窓にもたれ、私の心臓はそばにある",
+                "私たちはどこへ行くのか",
+                "あなたは見ている、九時の方向",
+                "ジュネーブ湖の家は高いのか",
+                "世界には七千の場所がある",
+                "私たちはどこに定住するのか",
+                "教えて、答えは何か",
+                "あなたはどこへ行くのが好きか、青海か三亜か、アイスランドかギリシャか",
+                "南米には行かないのか、砂漠は好きか",
+                "私、質問しすぎたか",
+                "知っているか、ここは雨季が一、二日しかない",
+                "昼は長くも短くもある、夜は三年ある",
+                "知っているか、今日のニュース",
+                "1号線のあの橋が壊れたと言っていた",
+                "私たちはまだ行くのか、いや、もうやめるか",
+                "修理に一年かかるだろう、一年待てるか",
+                "あなたはまだ行くのか、好きか"
+            ];
+
+            const poemContainer = document.getElementById('poem-container');
+            const pauseBtn = document.getElementById('pause-btn');
+            const restartBtn = document.getElementById('restart-btn');
+            
+            let currentIndex = 0;
+            let interval;
+            let isPaused = false;
+
+            // 创建诗句元素
+            poemLines.forEach((line, index) => {
+                const lineElement = document.createElement('div');
+                lineElement.className = 'poem-line';
+                lineElement.textContent = line;
+                poemContainer.appendChild(lineElement);
+            });
+
+            const lineElements = document.querySelectorAll('.poem-line');
+
+            // 开始播放
+            function startPlayback() {
+                if (interval) clearInterval(interval);
+                
+                interval = setInterval(() => {
+                    if (currentIndex < lineElements.length) {
+                        lineElements[currentIndex].classList.add('visible');
+                        currentIndex++;
+                        
+                        // 自动滚动到当前行
+                        if (currentIndex > 3) {
+                            lineElements[currentIndex - 1].scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'center'
+                            });
+                        }
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, 2000); // 每2秒显示一行
+            }
+
+            // 暂停/继续播放
+            pauseBtn.addEventListener('click', function() {
+                if (isPaused) {
+                    startPlayback();
+                    this.textContent = '暂停';
+                    this.className = 'pause-btn';
+                    isPaused = false;
+                } else {
+                    clearInterval(interval);
+                    this.textContent = '继续';
+                    this.className = 'restart-btn';
+                    isPaused = true;
+                }
+            });
+
+            // 重新开始
+            restartBtn.addEventListener('click', function() {
+                clearInterval(interval);
+                lineElements.forEach(el => el.classList.remove('visible'));
+                currentIndex = 0;
+                isPaused = false;
+                pauseBtn.textContent = '暂停';
+                pauseBtn.className = 'pause-btn';
+                setTimeout(startPlayback, 500);
+            });
+
+            // 自动开始播放
+            setTimeout(startPlayback, 1000);
+        });
+    </script>
+</body>
+</html>
