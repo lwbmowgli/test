@@ -26,7 +26,37 @@ jobs:
           # 讯飞 API Key
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
 
-          # 讯飞 MaaS OpenAI兼容地址
-          OPENAI.API_BASE: https://maas-api.cn-huabei-1.xf-yun.com/v2
-          # 模型
-          config.model: xop35qwen2b
+        name: PR Agent
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  issue_comment:
+
+jobs:
+  pr_agent_job:
+    if: ${{ github.event.sender.type != 'Bot' }}
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+      checks: write
+
+    steps:
+      - name: PR Agent
+        uses: the-pr-agent/pr-agent@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # 讯飞 API Key
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
+
+          # 讯飞 MaaS OpenAI 兼容地址（双下划线，Dynaconf 读取为 openai.api_base）
+          OPENAI__API_BASE: https://maas-api.cn-huabei-1.xf-yun.com/v2
+
+          # 模型（双下划线，Dynaconf 读取为 config.model）
+          CONFIG__MODEL: xop35qwen2b
+
