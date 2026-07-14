@@ -26,9 +26,17 @@ jobs:
           # 讯飞 API Key
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
 
-          # 讯飞 MaaS OpenAI 兼容地址（双下划线，Dynaconf 读取为 openai.api_base）
-          OPENAI__API_BASE: https://maas-api.cn-huabei-1.xf-yun.com/v2
+          # # 讯飞 MaaS OpenAI 兼容地址（双下划线，Dynaconf 读取为 openai.api_base）
+          # OPENAI__API_BASE: https://maas-api.cn-huabei-1.xf-yun.com/v2
 
-          # 模型（双下划线，Dynaconf 读取为 config.model）
-          CONFIG__MODEL: xop35qwen2b
+          # # 模型（双下划线，Dynaconf 读取为 config.model）
+          # CONFIG__MODEL: xop35qwen2b
+
+          OPENAI_API_BASE: https://maas-api.cn-huabei-1.xf-yun.com/v2
+
+          CONFIG__MODEL: openai/xop35qwen2b
+
+          CONFIG__FALLBACK_MODELS: ""
+
+          LOG_LEVEL: DEBUG
 
