@@ -1,0 +1,32 @@
+name: PR Agent
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  issue_comment:
+
+jobs:
+  pr_agent_job:
+    if: ${{ github.event.sender.type != 'Bot' }}
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+      checks: write
+
+    steps:
+      - name: PR Agent
+        uses: the-pr-agent/pr-agent@main
+        env:
+          GITHUB_TOKEN: 
+
+          # 讯飞 API Key
+          OPENAI_KEY: 0eb1713e95464f2401c0cd3c4b258ec9:NGNjYTQwMGQ2Y2NlZDhiNTEyZTBkODk5
+
+          # 讯飞 MaaS OpenAI兼容地址
+          OPENAI.API_BASE: https://maas-api.cn-huabei-1.xf-yun.com/v2
+          # 模型
+          config.model: xop3qwen32bvl
