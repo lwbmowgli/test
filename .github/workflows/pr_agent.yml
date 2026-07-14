@@ -21,10 +21,10 @@ jobs:
       - name: PR Agent
         uses: the-pr-agent/pr-agent@main
         env:
-          GITHUB_TOKEN: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
           # 讯飞 API Key
-          OPENAI_KEY: 0eb1713e95464f2401c0cd3c4b258ec9:NGNjYTQwMGQ2Y2NlZDhiNTEyZTBkODk5
+          OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
 
           # 讯飞 MaaS OpenAI兼容地址
           OPENAI.API_BASE: https://maas-api.cn-huabei-1.xf-yun.com/v2
