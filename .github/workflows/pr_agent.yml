@@ -40,3 +40,5 @@ jobs:
 
           LOG_LEVEL: DEBUG
 
+          CONFIG__CUSTOM_MODEL_MAX_TOKENS: "16384"
+
