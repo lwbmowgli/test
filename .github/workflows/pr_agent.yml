@@ -29,4 +29,4 @@ jobs:
           # 讯飞 MaaS OpenAI兼容地址
           OPENAI.API_BASE: https://maas-api.cn-huabei-1.xf-yun.com/v2
           # 模型
-          config.model: xop3qwen32bvl
+          config.model: xop35qwen2b
