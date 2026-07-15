@@ -4,7 +4,7 @@ import sqlite3
 app = Flask(__name__)
 
 users = []
-
+print()
 def add_user(name, age):
     users.append({
         "name": name,
